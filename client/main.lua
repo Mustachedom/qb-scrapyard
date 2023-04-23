@@ -134,37 +134,33 @@ function ScrapVehicle()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), true)
     if vehicle ~= 0 and vehicle ~= nil then
         if not isBusy then
-            if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
-                if IsVehicleValid(GetEntityModel(vehicle)) then
-                    local vehiclePlate = QBCore.Functions.GetPlate(vehicle)
-                    QBCore.Functions.TriggerCallback('qb-scrapyard:checkOwnerVehicle',function(retval)
-                        if retval then
-                            isBusy = true
-                            local scrapTime = math.random(28000, 37000)
-                            ScrapVehicleAnim(scrapTime)
-                            QBCore.Functions.Progressbar("scrap_vehicle", Lang:t('text.demolish_vehicle'), scrapTime, false, true, {
-                                disableMovement = true,
-                                disableCarMovement = true,
-                                disableMouse = false,
-                                disableCombat = true,
-                            }, {}, {}, {}, function() -- Done
-                                TriggerServerEvent("qb-scrapyard:server:ScrapVehicle", GetVehicleKey(GetEntityModel(vehicle)))
-                                SetEntityAsMissionEntity(vehicle, true, true)
-                                DeleteVehicle(vehicle)
-                                isBusy = false
-                            end, function() -- Cancel
-                                isBusy = false
-                                QBCore.Functions.Notify(Lang:t('error.canceled'), "error")
-                            end)
-                        else
-                            QBCore.Functions.Notify(Lang:t('error.smash_own'), "error")
-                        end
-                    end,vehiclePlate)
-                else
-                    QBCore.Functions.Notify(Lang:t('error.cannot_scrap'), "error")
-                end
-            else
-                QBCore.Functions.Notify(Lang:t('error.not_driver'), "error")
+              if IsVehicleValid(GetEntityModel(vehicle)) then
+                  local vehiclePlate = QBCore.Functions.GetPlate(vehicle)
+                  QBCore.Functions.TriggerCallback('qb-scrapyard:checkOwnerVehicle',function(retval)
+                      if retval then
+                          isBusy = true
+                          local scrapTime = math.random(28000, 37000)
+                          ScrapVehicleAnim(scrapTime)
+                          QBCore.Functions.Progressbar("scrap_vehicle", Lang:t('text.demolish_vehicle'), scrapTime, false, true, {
+                              disableMovement = true,
+                              disableCarMovement = true,
+                              disableMouse = false,
+                              disableCombat = true,
+                          }, {}, {}, {}, function() -- Done
+                              TriggerServerEvent("qb-scrapyard:server:ScrapVehicle", GetVehicleKey(GetEntityModel(vehicle)))
+                              SetEntityAsMissionEntity(vehicle, true, true)
+                              DeleteVehicle(vehicle)
+                              isBusy = false
+                          end, function() -- Cancel
+                              isBusy = false
+                              QBCore.Functions.Notify(Lang:t('error.canceled'), "error")
+                          end)
+                      else
+                         QBCore.Functions.Notify(Lang:t('error.smash_own'), "error")
+                      end
+                   end,vehiclePlate)
+              else
+                QBCore.Functions.Notify(Lang:t('error.cannot_scrap'), "error")
             end
         end
     end
